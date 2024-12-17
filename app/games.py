@@ -1,5 +1,5 @@
 import json
-from app import app
+from app import app, db
 from config import wrapper
 from datetime import datetime
 
@@ -19,6 +19,13 @@ def search_games(query, page):
         gamedict = {}
         gamedict['id'] = game['id']
         gamedict['name'] = game['name']
+
+        from app.models import Game
+        game_obj = Game(id=gamedict['id'], name=gamedict['name'])
+        if db.session.get(Game, gamedict['id']) is None:
+            db.session.add(game_obj)
+            db.session.commit()
+
         gamedict['igdb_url'] = game['url']
         if game.get('cover'):
             #t_cover_small or t_thumb?

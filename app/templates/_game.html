@@ -8,8 +8,25 @@
         <td>
             {{ game.name }} ({{ game.release_year }})
         </td>
-        <td>
+        <td align="center">
             {{ game.id }}
+        </td>
+        <td align="right">
+        {% if not current_user.is_playing(game) %}
+        <p>
+            <form action="{{ url_for('play', game_id=game.id) }}" method="post">
+                {{ form.hidden_tag() }}
+                {{ form.submit(value='Play') }}
+            </form>
+        </p>
+        {% else %}
+        <p>
+            <form action="{{ url_for('unplay', game_id=game.id) }}" method="post">
+                {{ form.hidden_tag() }}
+                {{ form.submit(value='Unplay') }}
+            </form>
+        </p>
+        {% endif %}
         </td>
     </tr>
 </table>

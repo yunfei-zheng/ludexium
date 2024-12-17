@@ -16,6 +16,21 @@ followers = sa.Table(
     sa.Column('followed_id', sa.Integer, sa.ForeignKey('user.id'), primary_key=True)
 )
 
+played_games = sa.Table(
+    'played_games',
+    db.metadata,
+    sa.Column('player_id', sa.Integer, sa.ForeignKey('user.id'), primary_key=True),
+    sa.Column('game_id', sa.Integer, sa.ForeignKey('game.id'), primary_key=True)
+)
+
+class Game(db.Model):
+    id: so.Mapped[int] = so.mapped_column(primary_key=True)
+    name: so.Mapped[str] = so.mapped_column(sa.String(256))
+
+    players: so.WriteOnlyMapped['User'] = so.relationship(
+        secondary=played_games, primaryjoin=(played_games.c.game_id == id),
+        back_populates='played_games')
+
 class User(UserMixin, db.Model):
     id: so.Mapped[int] = so.mapped_column(primary_key=True)
     username: so.Mapped[str] = so.mapped_column(sa.String(64), index=True, unique=True)
@@ -23,7 +38,10 @@ class User(UserMixin, db.Model):
     password_hash: so.Mapped[Optional[str]] = so.mapped_column(sa.String(256))
     about_me: so.Mapped[Optional[str]] = so.mapped_column(sa.String(140))
     last_seen: so.Mapped[Optional[datetime]] = so.mapped_column(default=lambda: datetime.now(timezone.utc))
-    favorite_game: so.Mapped[Optional[str]] = so.mapped_column(sa.String(120), index=True, unique=True)
+
+    played_games: so.WriteOnlyMapped['Game'] = so.relationship(
+        secondary=played_games, primaryjoin=(played_games.c.player_id == id),
+        back_populates='players')
 
     posts: so.WriteOnlyMapped['Post'] = so.relationship(back_populates='author')
     following: so.WriteOnlyMapped['User'] = so.relationship(
@@ -99,10 +117,32 @@ class User(UserMixin, db.Model):
             return
         return db.session.get(User, id)
     
-    # My own method!
-    def set_favorite_game(self):
-        from random import randint
-        self.favorite_game = games.get_game_name_from_id(randint(1, 100000))
+    def start_playing(self, game):
+        if not self.is_playing(game):
+            self.played_games.add(game)
+
+    def stop_playing(self, game):
+        if self.is_playing(game):
+            self.played_games.remove(game)
+
+    def is_playing(self, game):
+        if isinstance(game, dict):
+            query = self.played_games.select().where(Game.id == game['id'])
+        else:
+            query = self.played_games.select().where(Game.id == game.id)
+        return db.session.scalar(query) is not None
+    
+    def played_games_count(self):
+        query = sa.select(sa.func.count()).select_from(
+            self.played_games.select().subquery())
+        return db.session.scalar(query)
+    
+    def played_games_list(self):
+        query = sa.select(self.played_games.c.game_id).select_from(
+            self.played_games.select().subquery()
+        )
+        return db.session.scalars(query)
+
 
 
 @login.user_loader
