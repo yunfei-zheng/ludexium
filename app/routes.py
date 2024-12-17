@@ -197,6 +197,7 @@ def search():
     # bad lol
     global current_url
     current_url = url_for('search', q=g.search_form.q.data, page=page)
+    
     next_url = url_for('search', q=g.search_form.q.data, page=page + 1) \
         if total > page * app.config['POSTS_PER_PAGE'] else None
     prev_url = url_for('search', q=g.search_form.q.data, page=page - 1) \
@@ -212,7 +213,7 @@ def play(game_id):
         game = db.session.scalar(
             sa.select(Game).where(Game.id == game_id))
         if game is None:
-            flash(f'Game {game_id} not found.')
+            flash(f'Game {game.name} not found.')
             return redirect(url_for('index'))
         if current_user.is_playing(game):
             flash('You are already playing this game!')
@@ -220,7 +221,7 @@ def play(game_id):
             return redirect(current_url)
         current_user.start_playing(game)
         db.session.commit()
-        flash(f'You have added {game_id} to your Played List!')
+        flash(f'You have added {game.name} to your Played List!')
         #return redirect(url_for('search'))
         return redirect(current_url)
     else:
@@ -235,7 +236,7 @@ def unplay(game_id):
         game = db.session.scalar(
             sa.select(Game).where(Game.id == game_id))
         if game is None:
-            flash(f'Game {game_id} not found.')
+            flash(f'Game {game.name} not found.')
             return redirect(url_for('index'))
         if not current_user.is_playing(game):
             flash('You are already not playing this game!')
@@ -243,7 +244,7 @@ def unplay(game_id):
             return redirect(current_url)
         current_user.stop_playing(game)
         db.session.commit()
-        flash(f'You have removed {game_id} from your Played List!')
+        flash(f'You have removed {game.name} from your Played List!')
         #return redirect(url_for('search'))
         return redirect(current_url)
     else:

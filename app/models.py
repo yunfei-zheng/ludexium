@@ -26,6 +26,10 @@ played_games = sa.Table(
 class Game(db.Model):
     id: so.Mapped[int] = so.mapped_column(primary_key=True)
     name: so.Mapped[str] = so.mapped_column(sa.String(256))
+    igdb_url: so.Mapped[str] = so.mapped_column(sa.String(256), default='https://www.igdb.com/404.html')
+    image_url: so.Mapped[str] = so.mapped_column(sa.String(256), 
+        default='https://images.igdb.com/igdb/image/upload/t_thumb/nocover.jpg')
+    release_year: so.Mapped[Optional[int]] = so.mapped_column(sa.Integer)
 
     players: so.WriteOnlyMapped['User'] = so.relationship(
         secondary=played_games, primaryjoin=(played_games.c.game_id == id),
@@ -126,10 +130,10 @@ class User(UserMixin, db.Model):
             self.played_games.remove(game)
 
     def is_playing(self, game):
-        if isinstance(game, dict):
-            query = self.played_games.select().where(Game.id == game['id'])
-        else:
-            query = self.played_games.select().where(Game.id == game.id)
+        # if isinstance(game, dict):
+        #     query = self.played_games.select().where(Game.id == game['id'])
+        # else:
+        query = self.played_games.select().where(Game.id == game.id)
         return db.session.scalar(query) is not None
     
     def played_games_count(self):
@@ -137,12 +141,11 @@ class User(UserMixin, db.Model):
             self.played_games.select().subquery())
         return db.session.scalar(query)
     
-    def played_games_list(self):
-        query = sa.select(self.played_games.c.game_id).select_from(
-            self.played_games.select().subquery()
-        )
-        return db.session.scalars(query)
-
+    # def played_games_list(self):
+    #     query = sa.select(self.played_games.c.game_id).select_from(
+    #         self.played_games.select().subquery()
+    #     )
+    #     return db.session.scalars(query)
 
 
 @login.user_loader

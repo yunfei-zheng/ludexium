@@ -6,7 +6,12 @@
             </a>
         </td>
         <td>
-            {{ game.name }} ({{ game.release_year }})
+            {{ game.name }} 
+            {% if game.release_year %} 
+            ({{ game.release_year }})
+            {% else %}
+            (Unknown Release Date)
+            {% endif %}
         </td>
         <td align="center">
             {{ game.id }}
