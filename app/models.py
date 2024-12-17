@@ -7,7 +7,7 @@ from hashlib import md5
 import jwt
 import sqlalchemy as sa
 import sqlalchemy.orm as so
-from app import app, db, login, games
+from app import app, db, login
 
 followers = sa.Table(
     'followers',
@@ -27,8 +27,7 @@ class Game(db.Model):
     id: so.Mapped[int] = so.mapped_column(primary_key=True)
     name: so.Mapped[str] = so.mapped_column(sa.String(256))
     igdb_url: so.Mapped[str] = so.mapped_column(sa.String(256))
-    image_url: so.Mapped[str] = so.mapped_column(sa.String(256), 
-        default='https://images.igdb.com/igdb/image/upload/t_thumb/nocover.jpg')
+    image_url: so.Mapped[Optional[str]] = so.mapped_column(sa.String(256))
     release_year: so.Mapped[Optional[int]] = so.mapped_column(sa.Integer)
 
     players: so.WriteOnlyMapped['User'] = so.relationship(

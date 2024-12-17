@@ -1,8 +1,12 @@
 <table class="table table-hover">
     <tr>
         <td width="70px">
-            <a href="{{ game.igdb_url }}">
+            <a href="{{ game.igdb_url }}"> 
+                {% if game.image_url %} 
                 <img src="{{ game.image_url }}" />
+                {% else %}
+                <img src="https://images.igdb.com/igdb/image/upload/t_thumb/nocover.jpg" />
+                {% endif %}
             </a>
         </td>
         <td>

@@ -1,21 +1,19 @@
 import json
 from app import app, db
+from app.models import Game
 from config import wrapper
 from datetime import datetime
-
-# TODO: need to work on try catch HTTP error
 
 def search_games(query, page):
     gamelist = []
     byte_array = wrapper.api_request(
         'games',
         f'fields id,name,url,cover.image_id,first_release_date; \
-        where name ~ *"{query}"*;sort rating desc;'
+        where name ~ *"{query}"*;limit 500;sort rating desc;'
     )
     response = json.loads(byte_array.decode('utf-8'))
 
     for gamejson in response:
-        from app.models import Game
         
         game = Game(id=gamejson['id'], name=gamejson['name'], igdb_url=gamejson['url'])
         if db.session.get(Game, gamejson['id']) is None:

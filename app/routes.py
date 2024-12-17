@@ -1,6 +1,7 @@
 from datetime import datetime, timezone
 from flask import render_template, flash, redirect, url_for, request, g
 from flask_login import current_user, login_user, logout_user, login_required
+from requests import HTTPError
 from urllib.parse import urlsplit
 import sqlalchemy as sa
 from app import app, db
@@ -192,7 +193,10 @@ def search():
 
     page = request.args.get('page', 1, type=int)
     search_query = g.search_form.q.data
-    games, total = search_games(search_query, page)
+    try:
+        games, total = search_games(search_query, page)
+    except HTTPError:
+        return render_template('500.html')
 
     # bad lol
     global current_url
