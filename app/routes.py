@@ -1,5 +1,5 @@
 from datetime import datetime, timezone
-from flask import render_template, flash, redirect, url_for, request, g
+from flask import render_template, flash, redirect, url_for, request, g, jsonify
 from flask_login import current_user, login_user, logout_user, login_required
 from requests import HTTPError
 from urllib.parse import urlsplit
@@ -209,53 +209,86 @@ def search():
     form = EmptyForm()
     return render_template('search.html', title='Search', games=games, next_url=next_url, prev_url=prev_url, form=form)
 
+# @app.route('/play/<game_id>', methods=['POST'])
+# @login_required
+# def play(game_id):
+#     form = EmptyForm()
+#     if form.validate_on_submit():
+#         game = db.session.scalar(
+#             sa.select(Game).where(Game.id == game_id))
+#         if game is None:
+#             flash(f'Game {game.name} not found.')
+#             return redirect(url_for('index'))
+#         if current_user.is_playing(game):
+#             flash('You are already playing this game!')
+#             return redirect(current_url)
+#         current_user.start_playing(game)
+#         db.session.commit()
+#         flash(f'You have added {game.name} to your Played List!')
+#         return redirect(current_url)
+#     else:
+#         return redirect(url_for('index'))
 @app.route('/play/<game_id>', methods=['POST'])
 @login_required
 def play(game_id):
-    form = EmptyForm()
-    if form.validate_on_submit():
-        game = db.session.scalar(
-            sa.select(Game).where(Game.id == game_id))
-        if game is None:
-            flash(f'Game {game.name} not found.')
-            return redirect(url_for('index'))
-        if current_user.is_playing(game):
-            flash('You are already playing this game!')
-            #return redirect(url_for('search'))
-            return redirect(current_url)
-        current_user.start_playing(game)
-        db.session.commit()
-        flash(f'You have added {game.name} to your Played List!')
-        #return redirect(url_for('search'))
-        return redirect(current_url)
-    else:
-        return redirect(url_for('index'))
+    # Fetch the game from the database
+    game = db.session.scalar(
+        sa.select(Game).where(Game.id == game_id)
+    )
+    if game is None:
+        flash('Game not found.')
+        return jsonify(success=False, message="Game not found"), 404
 
+    # Check if the user is already playing the game
+    if current_user.is_playing(game):
+        flash('You are already playing this game!')
+        return jsonify(success=False, message="Game is already not being played"), 400
 
+    # Add the game to the user's played list
+    #flash(f'You have added {game.name} to your Played List!', 'success')
+    current_user.start_playing(game)
+    db.session.commit()
+    return jsonify(success=True, message=f'You have added {game.name} to your Played List!')
+
+# @app.route('/unplay/<game_id>', methods=['POST'])
+# @login_required
+# def unplay(game_id):
+#     form = EmptyForm()
+#     if form.validate_on_submit():
+#         game = db.session.scalar(
+#             sa.select(Game).where(Game.id == game_id))
+#         if game is None:
+#             flash(f'Game {game.name} not found.')
+#             return redirect(url_for('index'))
+#         if not current_user.is_playing(game):
+#             flash('You are already not playing this game!')
+#             return redirect(current_url)
+#         current_user.stop_playing(game)
+#         db.session.commit()
+#         flash(f'You have removed {game.name} from your Played List!')
+#         return redirect(current_url)
+#     else:
+#         return redirect(url_for('index'))
 @app.route('/unplay/<game_id>', methods=['POST'])
 @login_required
 def unplay(game_id):
-    form = EmptyForm()
-    if form.validate_on_submit():
-        game = db.session.scalar(
-            sa.select(Game).where(Game.id == game_id))
-        if game is None:
-            flash(f'Game {game.name} not found.')
-            return redirect(url_for('index'))
-        if not current_user.is_playing(game):
-            flash('You are already not playing this game!')
-            #return redirect(url_for('search'))
-            return redirect(current_url)
-        current_user.stop_playing(game)
-        db.session.commit()
-        flash(f'You have removed {game.name} from your Played List!')
-        #return redirect(url_for('search'))
-        return redirect(current_url)
-    else:
-        return redirect(url_for('index'))
+    game = db.session.scalar(
+        sa.select(Game).where(Game.id == game_id)
+    )
+    if game is None:
+        return jsonify(success=False, message="Game not found"), 404
+
+    if not current_user.is_playing(game):
+        return jsonify(success=False, message="Game is already not being played"), 400
+
+    #flash(f'You have removed {game.name} to your Played List!', 'success')
+    current_user.stop_playing(game)
+    db.session.commit()
+    return jsonify(success=True, message=f'You have removed {game.name} to your Played List!')
 
 @app.route('/my_games/<username>')
 @login_required
 def my_games(username):
+    form = EmptyForm()
     user = db.first_or_404(sa.select(User).where(User.username == username))
     return render_template('my_games.html', user=user)

@@ -1,4 +1,4 @@
-<table class="table table-hover">
+<table class="table table-hover" id="game-{{ game.id }}">
     <tr>
         <td width="70px">
             <a href="{{ game.igdb_url }}"> 
@@ -21,23 +21,84 @@
             {{ game.id }}
         </td>
         <td align="right">
-        {% if not current_user.is_playing(game) %}
-        <p>
-            <form action="{{ url_for('play', game_id=game.id) }}" method="post" style="opacity: 0; pointer-events: none" id="play_form">
-                {{ form.hidden_tag() }}
-                {{ form.submit(value='Play') }}
-            </form>
-            <button type="submit" value="Play" class="btn btn-primary" form="play_form">Play</button>
-        </p>
-        {% else %}
-        <p>
-            <form action="{{ url_for('unplay', game_id=game.id) }}" method="post" style="opacity: 0; pointer-events: none" id="unplay_form">         
-                {{ form.hidden_tag() }}
-                {{ form.submit(value='Unplay') }}
-            </form>
-            <button type="submit" value="Unplay" class="btn btn-primary" form="unplay_form">Unplay</button>
-        </p>
-        {% endif %}
+            <p>
+                {% if not current_user.is_playing(game) %}
+                <button id="button-{{ game.id }}" type="button" class="btn btn-primary" 
+                    onclick="togglePlay('{{ game.id }}', true)">Play</button>
+                {% else %}
+                <button id="button-{{ game.id }}" type="button" class="btn btn-primary" 
+                    onclick="togglePlay('{{ game.id }}', false)">Unplay</button>
+                {% endif %}
+            </p>
         </td>
     </tr>
 </table>
+
+{% block more_js %}
+<script>
+    function displayFlashMessage(message, category) {
+        const flashMessageContainer = document.getElementById('flash-message-container');
+
+        const flashMessageDiv = document.createElement('div');
+        flashMessageDiv.classList.add('alert');
+        flashMessageDiv.classList.add(`alert-${category}`);
+        flashMessageDiv.textContent = message;
+
+        flashMessageContainer.appendChild(flashMessageDiv);
+
+        // Auto-dismiss the flash message after 5 seconds
+        setTimeout(() => {
+            flashMessageDiv.style.display = 'none';
+        }, 5000);
+    }
+    function togglePlay(gameId, isPlaying) {
+        const action = isPlaying ? 'play' : 'unplay'; // Determine the action (play/unplay)
+        const button = document.getElementById(`button-${gameId}`);
+        const gameElement = document.getElementById(`game-${gameId}`);
+
+        // Send a POST request to the appropriate endpoint
+        fetch(`/${action}/${gameId}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                // Pass the CSRF token
+            },
+            body: JSON.stringify({})
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                // Toggle the button text and behavior
+                if (isPlaying) {
+                    button.textContent = 'Unplay';
+                    button.setAttribute('onclick', `togglePlay('${gameId}', false)`);
+                } else {
+                    button.textContent = 'Play';
+                    button.setAttribute('onclick', `togglePlay('${gameId}', true)`);
+                }
+                // Optionally fade the game element slightly if unplayed and if current user
+                if ("{{ user == current_user }}" == "True") {
+                    if (!isPlaying) {
+                        gameElement.style.opacity = 0.5; // Visual feedback
+                    } else {
+                        gameElement.style.opacity = 1.0; // Restore visibility
+                    }
+                }
+                else {
+                    gameElement.style.opacity = 1.0; // always 1?
+                }
+                if (data.message) {
+                    displayFlashMessage(data.message, data.category);
+                }
+            } else {
+                // Handle error response
+                alert(`Error: ${data.message}`);
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('An error occurred while processing your request.');
+        });
+    }
+</script>
+{% endblock %}

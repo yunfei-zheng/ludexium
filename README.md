@@ -13,6 +13,3 @@ My first time working with backend.
 Inspirations:
 
 Miguel Grinberg's Flask Mega-Tutorial.
-
-TODO:
-Add an automatic post every time a game is added to played list?

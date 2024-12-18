@@ -2,15 +2,12 @@
 
 {% block content %}
 <h1>User {{ user.username }}'s Games</h1>
-<p>
-    {% if user.played_games_count() == 0 %}
-    This user hasn't added any games to their Game List yet.
-    {% else %}
-    {% for game in user.played_games_list() %}
-    {{ game }},
-    {% endfor %}
-    and more to come!
-    {% endif %}
-</p>
-                
+{% if user.played_games_count() == 0 %}
+<p>This user hasn't added any games to their Game List yet.</p>
+{% else %}
+{% for game in user.played_games_list() %}
+    {% include '_game.html' %}
+{% endfor %}
+{% endif %}
+   
 {% endblock %}
