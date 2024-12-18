@@ -20,9 +20,13 @@ function togglePlay(gameId, isPlaying) {
             if (isPlaying) {
                 button.textContent = 'Unplay';
                 button.setAttribute('onclick', `togglePlay('${gameId}', false)`);
+                button.classList.remove('btn-primary');
+                button.classList.add('btn-secondary');
             } else {
                 button.textContent = 'Play';
                 button.setAttribute('onclick', `togglePlay('${gameId}', true)`);
+                button.classList.remove('btn-secondary');
+                button.classList.add('btn-primary');
             }
             // Optionally fade the game element slightly if unplayed and if current user
             if ("{{ user == current_user }}" == "True") {
