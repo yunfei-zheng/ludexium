@@ -23,17 +23,19 @@
         <td align="right">
         {% if not current_user.is_playing(game) %}
         <p>
-            <form action="{{ url_for('play', game_id=game.id) }}" method="post">
+            <form action="{{ url_for('play', game_id=game.id) }}" method="post" style="opacity: 0; pointer-events: none" id="play_form">
                 {{ form.hidden_tag() }}
                 {{ form.submit(value='Play') }}
             </form>
+            <button type="submit" value="Play" class="btn btn-primary" form="play_form">Play</button>
         </p>
         {% else %}
         <p>
-            <form action="{{ url_for('unplay', game_id=game.id) }}" method="post">
+            <form action="{{ url_for('unplay', game_id=game.id) }}" method="post" style="opacity: 0; pointer-events: none" id="unplay_form">         
                 {{ form.hidden_tag() }}
                 {{ form.submit(value='Unplay') }}
             </form>
+            <button type="submit" value="Unplay" class="btn btn-primary" form="unplay_form">Unplay</button>
         </p>
         {% endif %}
         </td>
