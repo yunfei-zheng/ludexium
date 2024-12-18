@@ -1,14 +1,6 @@
 {% extends "base.html" %}
 {% import "bootstrap_wtf.html" as wtf %}
 
-{% block more_css %}
-<style>
-    h1 {
-        font: 50px red Arial
-    }
-</style>
-{% endblock %}
-
 {% block content %}
     <h1>Hi, {{ current_user.username }}!</h1>
     {% if form %}
