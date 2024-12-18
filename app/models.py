@@ -36,6 +36,11 @@ class Game(db.Model):
     
     def __repr__(self):
         return '{}'.format(self.name)
+    
+    def players_count(self):
+        query = sa.select(sa.func.count()).select_from(
+            self.players.select().subquery())
+        return db.session.scalar(query)
 
 class User(UserMixin, db.Model):
     id: so.Mapped[int] = so.mapped_column(primary_key=True)
@@ -143,7 +148,6 @@ class User(UserMixin, db.Model):
     def played_games_list(self):
         query = self.played_games.select()
         return db.session.scalars(query)
-
 
 @login.user_loader
 def load_user(id):

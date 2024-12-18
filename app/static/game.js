@@ -40,7 +40,7 @@ function togglePlay(gameId, isPlaying) {
                 gameElement.style.opacity = 1.0; // always 1?
             }
             if (data.message) {
-                displayFlashMessage(data.message, data.category);
+                displayFlashMessage(data.message);
             }
         } else {
             // Handle error response

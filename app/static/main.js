@@ -1,9 +1,8 @@
-function displayFlashMessage(message, category) {
+function displayFlashMessage(message) {
     const flashMessageContainer = document.getElementById('flash-message-container');
 
     const flashMessageDiv = document.createElement('div');
     flashMessageDiv.classList.add('alert');
-    //flashMessageDiv.classList.add(`alert-${category}`);
     flashMessageDiv.classList.add('alert-info');
     flashMessageDiv.textContent = message;
 
