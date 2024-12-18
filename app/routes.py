@@ -253,3 +253,9 @@ def unplay(game_id):
         return redirect(current_url)
     else:
         return redirect(url_for('index'))
+
+@app.route('/my_games/<username>')
+@login_required
+def my_games(username):
+    user = db.first_or_404(sa.select(User).where(User.username == username))
+    return render_template('my_games.html', user=user)
