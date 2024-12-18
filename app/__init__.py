@@ -6,6 +6,7 @@ from flask_migrate import Migrate
 from flask_login import LoginManager
 from flask_mail import Mail
 from flask_moment import Moment
+from flask_wtf.csrf import CSRFProtect
 from logging.handlers import RotatingFileHandler
 import logging
 import os
@@ -27,6 +28,7 @@ login = LoginManager(app)
 login.login_view = 'login'
 mail = Mail(app)
 moment = Moment(app)
+csrf = CSRFProtect(app)
 
 if not app.debug:
     if not os.path.exists('logs'):

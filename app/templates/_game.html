@@ -36,32 +36,20 @@
 
 {% block more_js %}
 <script>
-    function displayFlashMessage(message, category) {
-        const flashMessageContainer = document.getElementById('flash-message-container');
+    
 
-        const flashMessageDiv = document.createElement('div');
-        flashMessageDiv.classList.add('alert');
-        flashMessageDiv.classList.add(`alert-${category}`);
-        flashMessageDiv.textContent = message;
-
-        flashMessageContainer.appendChild(flashMessageDiv);
-
-        // Auto-dismiss the flash message after 5 seconds
-        setTimeout(() => {
-            flashMessageDiv.style.display = 'none';
-        }, 5000);
-    }
     function togglePlay(gameId, isPlaying) {
         const action = isPlaying ? 'play' : 'unplay'; // Determine the action (play/unplay)
         const button = document.getElementById(`button-${gameId}`);
         const gameElement = document.getElementById(`game-${gameId}`);
+        const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
 
         // Send a POST request to the appropriate endpoint
         fetch(`/${action}/${gameId}`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                // Pass the CSRF token
+                'X-CSRFToken': csrfToken
             },
             body: JSON.stringify({})
         })

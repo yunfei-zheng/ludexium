@@ -209,25 +209,6 @@ def search():
     form = EmptyForm()
     return render_template('search.html', title='Search', games=games, next_url=next_url, prev_url=prev_url, form=form)
 
-# @app.route('/play/<game_id>', methods=['POST'])
-# @login_required
-# def play(game_id):
-#     form = EmptyForm()
-#     if form.validate_on_submit():
-#         game = db.session.scalar(
-#             sa.select(Game).where(Game.id == game_id))
-#         if game is None:
-#             flash(f'Game {game.name} not found.')
-#             return redirect(url_for('index'))
-#         if current_user.is_playing(game):
-#             flash('You are already playing this game!')
-#             return redirect(current_url)
-#         current_user.start_playing(game)
-#         db.session.commit()
-#         flash(f'You have added {game.name} to your Played List!')
-#         return redirect(current_url)
-#     else:
-#         return redirect(url_for('index'))
 @app.route('/play/<game_id>', methods=['POST'])
 @login_required
 def play(game_id):
@@ -250,25 +231,6 @@ def play(game_id):
     db.session.commit()
     return jsonify(success=True, message=f'You have added {game.name} to your Played List!')
 
-# @app.route('/unplay/<game_id>', methods=['POST'])
-# @login_required
-# def unplay(game_id):
-#     form = EmptyForm()
-#     if form.validate_on_submit():
-#         game = db.session.scalar(
-#             sa.select(Game).where(Game.id == game_id))
-#         if game is None:
-#             flash(f'Game {game.name} not found.')
-#             return redirect(url_for('index'))
-#         if not current_user.is_playing(game):
-#             flash('You are already not playing this game!')
-#             return redirect(current_url)
-#         current_user.stop_playing(game)
-#         db.session.commit()
-#         flash(f'You have removed {game.name} from your Played List!')
-#         return redirect(current_url)
-#     else:
-#         return redirect(url_for('index'))
 @app.route('/unplay/<game_id>', methods=['POST'])
 @login_required
 def unplay(game_id):
@@ -284,7 +246,7 @@ def unplay(game_id):
     #flash(f'You have removed {game.name} to your Played List!', 'success')
     current_user.stop_playing(game)
     db.session.commit()
-    return jsonify(success=True, message=f'You have removed {game.name} to your Played List!')
+    return jsonify(success=True, message=f'You have removed {game.name} from your Played List!')
 
 @app.route('/my_games/<username>')
 @login_required
