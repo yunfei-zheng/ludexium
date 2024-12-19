@@ -1,6 +1,6 @@
 from flask import request
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, BooleanField, SubmitField, TextAreaField
+from wtforms import StringField, PasswordField, BooleanField, SubmitField, TextAreaField, SelectField
 from wtforms.validators import ValidationError, DataRequired, Email, EqualTo, Length
 import sqlalchemy as sa
 from app import db
@@ -74,3 +74,8 @@ class SearchForm(FlaskForm):
         if 'meta' not in kwargs:
             kwargs['meta'] = {'csrf': False}
         super(SearchForm, self).__init__(*args, **kwargs)
+
+# class HoursPlayedForm(FlaskForm):
+#     game = SelectField('Game')
+#     hours = SelectField('Hours', choices=range(1, 24), coerce=int)
+#     submit = SubmitField('Log Hours')

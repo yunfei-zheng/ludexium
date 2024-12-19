@@ -197,10 +197,6 @@ def search():
         games, total = search_games(search_query, page)
     except HTTPError:
         return render_template('500.html')
-
-    # bad lol
-    global current_url
-    current_url = url_for('search', q=g.search_form.q.data, page=page)
     
     next_url = url_for('search', q=g.search_form.q.data, page=page + 1) \
         if total > page * app.config['POSTS_PER_PAGE'] else None
