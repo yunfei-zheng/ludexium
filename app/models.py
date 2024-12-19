@@ -16,12 +16,22 @@ followers = sa.Table(
     sa.Column('followed_id', sa.Integer, sa.ForeignKey('user.id'), primary_key=True)
 )
 
-played_games = sa.Table(
-    'played_games',
-    db.metadata,
-    sa.Column('player_id', sa.Integer, sa.ForeignKey('user.id'), primary_key=True),
-    sa.Column('game_id', sa.Integer, sa.ForeignKey('game.id'), primary_key=True)
-)
+class Play(db.Model):
+    __tablename__ = 'played_games'
+
+    # Composite primary key
+    player_id: so.Mapped[int] = so.mapped_column(sa.Integer, sa.ForeignKey('user.id'), primary_key=True)
+    game_id: so.Mapped[int] = so.mapped_column(sa.Integer, sa.ForeignKey('game.id'), primary_key=True)
+
+    # Additional fields
+    #hours_played = so.mapped_column(sa.Float, default=0.0)
+
+    # Relationships to User and Game models
+    user: so.Mapped['User'] = so.relationship('User', back_populates='played_games')
+    game: so.Mapped['Game'] = so.relationship('Game', back_populates='players')
+
+    def __repr__(self):
+        return f"<Play(user_id={self.player_id}, game_id={self.game_id}, hours_played={self.hours_played})>"
 
 class Game(db.Model):
     id: so.Mapped[int] = so.mapped_column(primary_key=True, unique=True)
@@ -30,9 +40,7 @@ class Game(db.Model):
     image_url: so.Mapped[Optional[str]] = so.mapped_column(sa.String(256))
     release_year: so.Mapped[Optional[int]] = so.mapped_column(sa.Integer)
 
-    players: so.WriteOnlyMapped['User'] = so.relationship(
-        secondary=played_games, primaryjoin=(played_games.c.game_id == id),
-        back_populates='played_games')
+    players: so.WriteOnlyMapped[Play] = so.relationship('Play', back_populates='game', lazy='dynamic')
     
     def __repr__(self):
         return '{}'.format(self.name)
@@ -50,9 +58,7 @@ class User(UserMixin, db.Model):
     about_me: so.Mapped[Optional[str]] = so.mapped_column(sa.String(140))
     last_seen: so.Mapped[Optional[datetime]] = so.mapped_column(default=lambda: datetime.now(timezone.utc))
 
-    played_games: so.WriteOnlyMapped['Game'] = so.relationship(
-        secondary=played_games, primaryjoin=(played_games.c.player_id == id),
-        back_populates='players')
+    played_games: so.WriteOnlyMapped[Play] = so.relationship('Play', back_populates='user', lazy='dynamic')
 
     posts: so.WriteOnlyMapped['Post'] = so.relationship(back_populates='author')
     following: so.WriteOnlyMapped['User'] = so.relationship(
@@ -130,14 +136,18 @@ class User(UserMixin, db.Model):
     
     def start_playing(self, game):
         if not self.is_playing(game):
-            self.played_games.add(game)
+            play = Play(player_id=self.id, game_id=game.id)
+            self.played_games.add(play)
 
+    # needs extra attention ig
     def stop_playing(self, game):
         if self.is_playing(game):
-            self.played_games.remove(game)
+            play = db.session.scalar(sa.select(Play).where(Play.player_id == self.id, Play.game_id == game.id))
+            self.played_games.remove(play)
+            db.session.delete(play)
 
     def is_playing(self, game):
-        query = self.played_games.select().where(Game.id == game.id)
+        query = sa.select(Play).where(Play.player_id == self.id, Play.game_id == game.id)
         return db.session.scalar(query) is not None
     
     def played_games_count(self):
@@ -147,13 +157,15 @@ class User(UserMixin, db.Model):
     
     def played_games_list(self):
         query = self.played_games.select()
-        return db.session.scalars(query)
+        #return db.session.scalars(query)
+        return [play.game for play in db.session.scalars(query)]
 
 @login.user_loader
 def load_user(id):
     return db.session.get(User, int(id))
 
 class Post(db.Model):
+
     id: so.Mapped[int] = so.mapped_column(primary_key=True)
     body: so.Mapped[str] = so.mapped_column(sa.String(140))
     timestamp: so.Mapped[datetime] = so.mapped_column(index=True, default=lambda: datetime.now(timezone.utc))

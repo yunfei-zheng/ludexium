@@ -7,7 +7,7 @@ import sqlalchemy as sa
 from app import app, db
 from app.forms import LoginForm, RegistrationForm, EditProfileForm, EmptyForm, \
     PostForm, ResetPasswordRequestForm, ResetPasswordForm, SearchForm
-from app.models import User, Post, Game
+from app.models import User, Post, Game, Play
 from app.email import send_password_reset_email
 from app.games import search_games
 
@@ -225,7 +225,7 @@ def play(game_id):
     #flash(f'You have added {game.name} to your Played List!', 'success')
     current_user.start_playing(game)
     db.session.commit()
-    return jsonify(success=True, message=f'You have added {game.name} to your Played List!')
+    return jsonify(success=True, message=f'You have added {game.name} to your My Games List!')
 
 @app.route('/unplay/<game_id>', methods=['POST'])
 @login_required
@@ -242,11 +242,10 @@ def unplay(game_id):
     #flash(f'You have removed {game.name} to your Played List!', 'success')
     current_user.stop_playing(game)
     db.session.commit()
-    return jsonify(success=True, message=f'You have removed {game.name} from your Played List!')
+    return jsonify(success=True, message=f'You have removed {game.name} from your My Games List!')
 
 @app.route('/my_games/<username>')
 @login_required
 def my_games(username):
-    form = EmptyForm()
     user = db.first_or_404(sa.select(User).where(User.username == username))
     return render_template('my_games.html', user=user)
