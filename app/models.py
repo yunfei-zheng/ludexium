@@ -17,21 +17,19 @@ followers = sa.Table(
 )
 
 class Play(db.Model):
-    __tablename__ = 'played_games'
-
     # Composite primary key
-    player_id: so.Mapped[int] = so.mapped_column(sa.Integer, sa.ForeignKey('user.id'), primary_key=True)
+    user_id: so.Mapped[int] = so.mapped_column(sa.Integer, sa.ForeignKey('user.id'), primary_key=True)
     game_id: so.Mapped[int] = so.mapped_column(sa.Integer, sa.ForeignKey('game.id'), primary_key=True)
 
     # Additional fields
-    #hours_played = so.mapped_column(sa.Float, default=0.0)
+    hours_played: so.Mapped[Optional[int]] = so.mapped_column(sa.Integer, default=0)
 
     # Relationships to User and Game models
     user: so.Mapped['User'] = so.relationship('User', back_populates='played_games')
     game: so.Mapped['Game'] = so.relationship('Game', back_populates='players')
 
     def __repr__(self):
-        return f"<Play(user_id={self.player_id}, game_id={self.game_id}, hours_played={self.hours_played})>"
+        return f"<Play(user_id={self.user_id}, game_id={self.game_id}, hours_played={self.hours_played})>"
 
 class Game(db.Model):
     id: so.Mapped[int] = so.mapped_column(primary_key=True, unique=True)
@@ -128,26 +126,27 @@ class User(UserMixin, db.Model):
     @staticmethod
     def verify_reset_password_token(token):
         try:
-            id = jwt.decode(token, app.config['SECRET_KEY'],
-                            algorithms=['HS256'])['reset_password']
+            id = jwt.decode(token, app.config['SECRET_KEY'], algorithms=['HS256'])['reset_password']
         except:
             return
         return db.session.get(User, id)
     
     def start_playing(self, game):
         if not self.is_playing(game):
-            play = Play(player_id=self.id, game_id=game.id)
+            # Here, we create a new Play object
+            play = Play(user_id=self.id, game_id=game.id)
             self.played_games.add(play)
 
     # needs extra attention ig
     def stop_playing(self, game):
         if self.is_playing(game):
-            play = db.session.scalar(sa.select(Play).where(Play.player_id == self.id, Play.game_id == game.id))
+            play = db.session.scalar(sa.select(Play).where(Play.user_id == self.id, Play.game_id == game.id))
             self.played_games.remove(play)
+            # And here, we delete that Play object from start_playing
             db.session.delete(play)
 
     def is_playing(self, game):
-        query = sa.select(Play).where(Play.player_id == self.id, Play.game_id == game.id)
+        query = sa.select(Play).where(Play.user_id == self.id, Play.game_id == game.id)
         return db.session.scalar(query) is not None
     
     def played_games_count(self):
@@ -155,9 +154,14 @@ class User(UserMixin, db.Model):
             self.played_games.select().subquery())
         return db.session.scalar(query)
     
-    def played_games_list(self):
+    def played_games_play(self):
+        '''Returns Play objects'''
         query = self.played_games.select()
-        #return db.session.scalars(query)
+        return db.session.scalars(query)
+
+    def played_games_list(self):
+        '''Returns actual Game objects, as a list'''
+        query = self.played_games.select()
         return [play.game for play in db.session.scalars(query)]
 
 @login.user_loader

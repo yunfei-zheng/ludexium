@@ -6,7 +6,7 @@ from urllib.parse import urlsplit
 import sqlalchemy as sa
 from app import app, db
 from app.forms import LoginForm, RegistrationForm, EditProfileForm, EmptyForm, \
-    PostForm, ResetPasswordRequestForm, ResetPasswordForm, SearchForm
+    PostForm, ResetPasswordRequestForm, ResetPasswordForm, SearchForm, HoursPlayedForm
 from app.models import User, Post, Game, Play
 from app.email import send_password_reset_email
 from app.games import search_games
@@ -249,3 +249,33 @@ def unplay(game_id):
 def my_games(username):
     user = db.first_or_404(sa.select(User).where(User.username == username))
     return render_template('my_games.html', user=user)
+
+@app.route('/playtime/<username>')
+@login_required
+def playtime(username):
+    user = db.first_or_404(sa.select(User).where(User.username == username))
+    form = HoursPlayedForm()
+    return render_template('playtime.html', user=user, form=form)
+
+@app.route('/log_hours/<int:user_id>/<int:game_id>', methods=['GET', 'POST'])
+@login_required
+def log_hours(user_id, game_id):
+    form = HoursPlayedForm()
+    if form.validate_on_submit():
+        # The form already provides an integer for hours_played
+        hours_played = form.hours_played.data
+
+        # Check if a record for this user and game already exists
+        play = Play.query.filter_by(user_id=user_id, game_id=game_id).first()
+
+        if play:
+            # Update existing record
+            play.hours_played = hours_played
+            flash('Your hours have been updated.', 'success')
+        else:
+            # Create a new record
+            play = Play(user_Id=user_id, game_id=game_id, hours_played=hours_played)
+            db.session.add(play)
+            flash('Your hours have been logged.', 'success')
+        db.session.commit()
+    return redirect(url_for('playtime', username=current_user.username))

@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1>User {{ user.username }}'s Playtime</h1>
+{% if user.played_games_count() == 0 %}
+<p>This user hasn't added any games to their Game List yet.</p>
+{% else %}
+{% for play in user.played_games_play() %}
+    Add hours for {{ play.game.name }} (Current: {{ play.hours_played }})
+    <form method="POST" action="{{ url_for('log_hours', user_id=play.user_id, game_id=play.game_id) }}">
+        {{ form.hidden_tag() }}
+        <div>
+            <label for="hours_played">Hours Played:</label>
+            {{ form.hours_played(class="form-control", type="number", step="1") }}
+        </div>
+        <div>
+            <button type="submit">{{ form.submit.label }}</button>
+        </div>
+    </form>
+{% endfor %}
+{% endif %}
+{% endblock %}
+

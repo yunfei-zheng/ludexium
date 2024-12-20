@@ -1,7 +1,7 @@
 from flask import request
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, BooleanField, SubmitField, TextAreaField, SelectField
-from wtforms.validators import ValidationError, DataRequired, Email, EqualTo, Length
+from wtforms import StringField, PasswordField, BooleanField, SubmitField, TextAreaField, IntegerField
+from wtforms.validators import ValidationError, DataRequired, Email, EqualTo, Length, InputRequired, NumberRange
 import sqlalchemy as sa
 from app import db
 from app.models import User
@@ -75,7 +75,7 @@ class SearchForm(FlaskForm):
             kwargs['meta'] = {'csrf': False}
         super(SearchForm, self).__init__(*args, **kwargs)
 
-# class HoursPlayedForm(FlaskForm):
-#     game = SelectField('Game')
-#     hours = SelectField('Hours', choices=range(1, 24), coerce=int)
-#     submit = SubmitField('Log Hours')
+class HoursPlayedForm(FlaskForm):
+    hours_played = IntegerField('Hours Played', 
+        validators=[InputRequired(), NumberRange(min=0, message="Hours must be a non-negative integer.")])
+    submit = SubmitField('Log Hours')
