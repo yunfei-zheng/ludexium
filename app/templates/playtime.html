@@ -6,7 +6,7 @@
 <p>This user hasn't added any games to their Game List yet.</p>
 {% else %}
     <div>
-    <canvas id="myChart" style="width:100%;max-width:1000px;max-height:400px"></canvas>
+    <canvas id="playtimeChart" style="width:100%;max-width:1000px;max-height:400px"></canvas>
     </div>
     {% if user == current_user %}
     {% for play in user.played_games_play() %}
@@ -32,5 +32,5 @@
     var chartlabels = JSON.parse(`{{ user.played_games_names() | tojson }}`);
     var chartdata = JSON.parse(`{{ user.played_games_hours() | tojson }}`);
 </script>
-<script src="{{ url_for('static', filename='chart.js') }}"></script>
+<script src="{{ url_for('static', filename='hours_chart.js') }}"></script>
 {% endblock %}

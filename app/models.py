@@ -156,9 +156,11 @@ class User(UserMixin, db.Model):
         return db.session.scalar(query)
     
     def played_games_play(self):
-        '''Returns Play objects'''
+        '''Returns Play objects in descending hours played order'''
         query = self.played_games.select()
-        return db.session.scalars(query)
+        playobjs = list(db.session.scalars(query))
+        playobjs.sort(key=lambda x: x.hours_played, reverse=True) #the sorting
+        return playobjs
 
     def played_games_list(self):
         '''Returns actual Game objects, as a list'''

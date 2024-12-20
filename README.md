@@ -5,9 +5,9 @@ This is my submission for the Choose Your Own Adventure Challenge for the DALI L
 
 I implemented a database for user information.
 I query the IGDB (Internet Games Database) for video game info.
-Python's ```igdb-api-v4```
+Python's ```igdb-api-v4``` [[(Github here)](https://github.com/twitchtv/igdb-api-python)]
 
-
+[ChartJS plugin for colors](https://github.com/kurkle/chartjs-plugin-autocolors)
 Inspirations:
 Miguel Grinberg's Flask Mega-Tutorial.
 
@@ -18,5 +18,5 @@ Since I was pretty familiar with Python, I decided to write the backend in it.
 So I chose the Flask framework, which I had never worked with before this.
 Actually, this is my first time doing backend for any kind of real project.
 
-An SQLite database.
+An SQLite database. This is also my first experience working with SQL tables and any database.
 I store information about users, posts, games.
