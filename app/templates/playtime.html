@@ -5,6 +5,9 @@
 {% if user.played_games_count() == 0 %}
 <p>This user hasn't added any games to their Game List yet.</p>
 {% else %}
+<div>
+<canvas id="myChart" style="width:100%;max-width:700px"></canvas>
+</div>
 {% for play in user.played_games_play() %}
     Add hours for {{ play.game.name }} (Current: {{ play.hours_played }})
     <form method="POST" action="{{ url_for('log_hours', user_id=play.user_id, game_id=play.game_id) }}">
@@ -21,3 +24,6 @@
 {% endif %}
 {% endblock %}
 
+{% block more_js %}
+<script src="{{ url_for('static', filename='chart.js') }}"></script>
+{% endblock %}

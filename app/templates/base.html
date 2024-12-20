@@ -84,7 +84,14 @@
         integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
         crossorigin="anonymous">
         </script>
+        <script
+        src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js">
+        </script>
         {{ moment.include_moment() }}
+        <script>
+          // Ok need to declare jinja dependent variables here apparently
+          var isCurrentUser = '{{ (user == current_user) }}' === 'True';
+        </script>
         <script src="{{ url_for('static', filename='main.js') }}"></script>
         {% block more_js %}{% endblock %}
     </body>

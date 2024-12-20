@@ -9,7 +9,7 @@ def search_games(query, page):
     byte_array = wrapper.api_request(
         'games',
         f'fields id,name,url,cover.image_id,first_release_date; \
-        search "{query}";limit 500;'
+        search "{query}";limit 500;where category = 0;'
     )
     response = json.loads(byte_array.decode('utf-8'))
 
