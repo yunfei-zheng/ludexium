@@ -5,25 +5,32 @@
 {% if user.played_games_count() == 0 %}
 <p>This user hasn't added any games to their Game List yet.</p>
 {% else %}
-<div>
-<canvas id="myChart" style="width:100%;max-width:700px"></canvas>
-</div>
-{% for play in user.played_games_play() %}
-    Add hours for {{ play.game.name }} (Current: {{ play.hours_played }})
-    <form method="POST" action="{{ url_for('log_hours', user_id=play.user_id, game_id=play.game_id) }}">
-        {{ form.hidden_tag() }}
-        <div>
-            <label for="hours_played">Hours Played:</label>
-            {{ form.hours_played(class="form-control", type="number", step="1") }}
-        </div>
-        <div>
-            <button type="submit">{{ form.submit.label }}</button>
-        </div>
-    </form>
-{% endfor %}
+    <div>
+    <canvas id="myChart" style="width:100%;max-width:1000px;max-height:400px"></canvas>
+    </div>
+    {% if user == current_user %}
+    {% for play in user.played_games_play() %}
+        Add hours for {{ play.game.name }} (Current: {{ play.hours_played }})
+        <form method="POST" action="{{ url_for('log_hours', user_id=play.user_id, game_id=play.game_id) }}">
+            {{ form.hidden_tag() }}
+            <div>
+                <label for="hours_played">Hours Played:</label>
+                {{ form.hours_played(class="form-control", type="number", step="1") }}
+            </div>
+            <div>
+                <button type="submit">{{ form.submit.label }}</button>
+            </div>
+        </form>
+    {% endfor %}
+    {% endif %}
 {% endif %}
 {% endblock %}
 
 {% block more_js %}
+<script>
+    // Ok need to declare jinja dependent variables here apparently
+    var chartlabels = JSON.parse(`{{ user.played_games_names() | tojson }}`);
+    var chartdata = JSON.parse(`{{ user.played_games_hours() | tojson }}`);
+</script>
 <script src="{{ url_for('static', filename='chart.js') }}"></script>
 {% endblock %}

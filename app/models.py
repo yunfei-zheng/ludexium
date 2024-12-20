@@ -16,6 +16,7 @@ followers = sa.Table(
     sa.Column('followed_id', sa.Integer, sa.ForeignKey('user.id'), primary_key=True)
 )
 
+# setting tablename seems to break things
 class Play(db.Model):
     # Composite primary key
     user_id: so.Mapped[int] = so.mapped_column(sa.Integer, sa.ForeignKey('user.id'), primary_key=True)
@@ -161,8 +162,15 @@ class User(UserMixin, db.Model):
 
     def played_games_list(self):
         '''Returns actual Game objects, as a list'''
-        query = self.played_games.select()
-        return [play.game for play in db.session.scalars(query)]
+        return [play.game for play in self.played_games_play()]
+    
+    def played_games_names(self):
+        '''Returns names of Games, as a list'''
+        return [game.name for game in self.played_games_list()]
+    
+    def played_games_hours(self):
+        '''Returns hours played of Games, as a list'''
+        return [play.hours_played for play in self.played_games_play()]
 
 @login.user_loader
 def load_user(id):

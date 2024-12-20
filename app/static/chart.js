@@ -3,10 +3,10 @@ const ctx = document.getElementById('myChart');
 new Chart(ctx, {
 type: 'bar',
 data: {
-    labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
+    labels: chartlabels,
     datasets: [{
     label: 'Playtime',
-    data: [12, 19, 3, 5, 2, 3],
+    data: chartdata,
     borderWidth: 1
     }]
 },

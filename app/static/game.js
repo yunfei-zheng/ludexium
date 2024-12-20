@@ -29,7 +29,6 @@ function togglePlay(gameId, isPlaying) {
                 button.classList.add('btn-primary');
             }
             // Optionally fade the game element slightly if unplayed and if current user
-            // OK gotta look into this...
             if (isCurrentUser) {
                 if (!isPlaying) {
                     gameElement.style.opacity = 0.5; // Visual feedback
