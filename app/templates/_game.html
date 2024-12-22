@@ -1,6 +1,7 @@
+<div class="game-table">
 <table class="table table-hover" id="game-{{ game.id }}">
     <tr>
-        <td width="70px">
+        <td>
             <a href="{{ game.igdb_url }}"> 
                 {% if game.image_url %} 
                 <img src="{{ game.image_url }}" />
@@ -23,16 +24,15 @@
             Played by {{ game.players_count() }} other players
             {% endif %}
         </td>
-        <td align="right">
-            <p>
-                {% if not current_user.is_playing(game) %}
-                <button id="button-{{ game.id }}" type="button" class="btn btn-primary" 
-                    onclick="togglePlay('{{ game.id }}', true)">Play</button>
-                {% else %}
-                <button id="button-{{ game.id }}" type="button" class="btn btn-secondary" 
-                    onclick="togglePlay('{{ game.id }}', false)">Unplay</button>
-                {% endif %}
-            </p>
+        <td width="180px" align="right">
+            {% if not current_user.is_playing(game) %}
+            <button id="button-{{ game.id }}" type="button" class="btn btn-primary" 
+                onclick="togglePlay('{{ game.id }}', true)">Play</button>
+            {% else %}
+            <button id="button-{{ game.id }}" type="button" class="btn btn-secondary" 
+                onclick="togglePlay('{{ game.id }}', false)">Unplay</button>
+            {% endif %}
         </td>
     </tr>
 </table>
+</div>

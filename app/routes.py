@@ -1,5 +1,5 @@
 from datetime import datetime, timezone
-from flask import render_template, flash, redirect, url_for, request, g, jsonify
+from flask import render_template, flash, redirect, url_for, request, g, jsonify, session
 from flask_login import current_user, login_user, logout_user, login_required
 from requests import HTTPError
 from urllib.parse import urlsplit
@@ -278,3 +278,14 @@ def log_hours(user_id, game_id):
             flash('Your hours have been logged.', 'success')
         db.session.commit()
     return redirect(url_for('playtime', username=current_user.username))
+
+@app.route("/toggle-theme")
+def toggle_theme():
+    # Note: this session is different from db.session
+    current_theme = session.get("theme")
+    if current_theme == "dark":
+        session["theme"] = "light"
+    else:
+        session["theme"] = "dark"
+
+    return redirect(request.args.get("current_page"))

@@ -1,30 +1,80 @@
-body {
-  font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
-  color: #002240;
+:root {
+  --text-dark: #002240;
+  --text-light: #fbf2f2;
+  --text-muted: #595959;
+
+  --background-color: #fff;
+  --accent-color: #f56565;
+  --accent-color-2: #3bb54a;
+  --tag-color: #e5e5e5;
+
+  --border: 3px solid #000;
+}
+  
+:root.dark-mode {
+  --text-dark: #fbf2f2;
+  --text-light: #000;
+  --text-muted: #595959;
+
+  --background-color: #1c2023;
+  --accent-color: #f56565;
+  --accent-color-2: #3bb54a;
+  --tag-color: var(--accent-color-2);
+
+  --border: 3px solid #fff;
 }
 
-:root {
-    --text-dark: #000;
-    --text-light: #fbf2f2;
-    --text-muted: #595959;
-  
-    --background-color: #fff;
-    --accent-colour: #f56565;
-    --accent-colour-2: #3bb54a;
-    --tag-colour: #e5e5e5;
-  
-    --border: 3px solid #000;
+html {
+  /* Sets global font size on small devices */
+  font-size: 10px;
+}
+
+@media screen and (min-width: 60em) {
+  html {
+    font-size: 13px;
   }
-  
-  :root.dark-mode {
-    --text-dark: #fbf2f2;
-    --text-light: #000;
-    --text-muted: #595959;
-  
-    --background-color: #1c2023;
-    --accent-colour: #f56565;
-    --accent-colour-2: #3bb54a;
-    --tag-colour: var(--accent-colour-2);
-  
-    --border: 3px solid #fff;
+}
+
+@media screen and (min-width: 75em) {
+  html {
+    font-size: 16px;
   }
+}
+
+body {
+  font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+  color: var(--text-dark);
+  background-color: var(--background-color);
+
+  padding-left: 10px;
+  padding-right: 10px;
+}
+
+.game-table table, 
+.post-table table {
+  /* TODO might wanna check in light mode */
+  border: 2px solid darkgreen;
+  margin-top: 5px;
+  margin-bottom: 5px;
+}
+
+td {
+  color: var(--text-dark) !important;
+  background-color: var(--background-color) !important;
+}
+
+svg {
+  width: 25px;
+  height: 25px;
+}
+
+.navbar-custom {
+  background-color: var(--background-color) !important;
+  margin-top: 5px;
+  padding-bottom: 0px;
+}
+
+.navbar-custom .navbar-text,
+.navbar-custom .nav-link {
+  color: var(--text-dark) !important;
+}
