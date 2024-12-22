@@ -17,7 +17,7 @@
         integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN"
         crossorigin="anonymous">
         
-        <link rel="spreadsheet" href="{{ url_for('static', filename='style.css') }}">
+        <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
         {% block more_css %}{% endblock %}
     </head>
     <body>
@@ -91,6 +91,7 @@
           // Ok need to declare jinja dependent variables here apparently
           var isCurrentUser = '{{ (user == current_user) }}' === 'True';
 
+          // Register ChartJS plugin
           const autocolors = window['chartjs-plugin-autocolors'];
           Chart.register(autocolors);
         </script>

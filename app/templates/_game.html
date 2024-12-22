@@ -9,23 +9,19 @@
                 {% endif %}
             </a>
         </td>
-        <td>
+        <td width="80%">
             {{ game.name }} 
             {% if game.release_year %} 
             ({{ game.release_year }})
             {% else %}
             (Unknown Release Date)
             {% endif %}
-        </td>
-        <td>
+            <hr>
             {% if current_user.is_playing(game) %} 
             Played by {{ game.players_count() - 1 }} other players
             {% else %}
             Played by {{ game.players_count() }} other players
             {% endif %}
-        </td>
-        <td align="center">
-            {{ game.id }}
         </td>
         <td align="right">
             <p>

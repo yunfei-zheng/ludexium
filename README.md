@@ -8,10 +8,11 @@ I query the IGDB (Internet Games Database) for video game info.
 Python's ```igdb-api-v4``` [[(Github here)](https://github.com/twitchtv/igdb-api-python)]
 
 [ChartJS plugin for colors](https://github.com/kurkle/chartjs-plugin-autocolors)
-Inspirations:
-Miguel Grinberg's Flask Mega-Tutorial.
 
 My Learning Journey:
+Mainly learned Flask from [Miguel Grinberg's Flask Mega-Tutorial.](https://blog.miguelgrinberg.com/post/the-flask-mega-tutorial-part-i-hello-world)
+I also utilized parts of the templates in that tutorial, including the user login system, but everything else is new functionality.
+
 I also implemented JavaScript for frontend interactivity which I didn't have much experience with before.
 
 Since I was pretty familiar with Python, I decided to write the backend in it.

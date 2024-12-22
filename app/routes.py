@@ -90,7 +90,7 @@ def user(username):
     next_url = url_for('user', username=user.username, page=posts.next_num) if posts.has_next else None
     prev_url = url_for('user', username=user.username, page=posts.prev_num) if posts.has_prev else None
     form = EmptyForm()
-    return render_template('user.html', user=user, posts=posts.items,
+    return render_template('user.html', title=f'{user.username} on Ludexium', user=user, posts=posts.items,
                            next_url=next_url, prev_url=prev_url, form=form)
 
 @app.before_request
@@ -167,8 +167,7 @@ def reset_password_request():
             send_password_reset_email(user)
         flash('Check your email for the instructions to reset your password')
         return redirect(url_for('login'))
-    return render_template('reset_password_request.html',
-                           title='Reset Password', form=form)
+    return render_template('reset_password_request.html', title='Reset Password Request', form=form)
 
 @app.route('/reset_password/<token>', methods=['GET', 'POST'])
 def reset_password(token):
@@ -183,7 +182,7 @@ def reset_password(token):
         db.session.commit()
         flash('Your password has been reset.')
         return redirect(url_for('login'))
-    return render_template('reset_password.html', form=form)
+    return render_template('reset_password.html', title='Reset Password', form=form)
 
 @app.route('/search')
 @login_required
@@ -203,7 +202,7 @@ def search():
     prev_url = url_for('search', q=g.search_form.q.data, page=page - 1) \
         if page > 1 else None
     form = EmptyForm()
-    return render_template('search.html', title='Search', games=games, next_url=next_url, prev_url=prev_url, form=form)
+    return render_template('search.html', title='Search Games', games=games, next_url=next_url, prev_url=prev_url, form=form)
 
 @app.route('/play/<game_id>', methods=['POST'])
 @login_required
@@ -248,14 +247,14 @@ def unplay(game_id):
 @login_required
 def my_games(username):
     user = db.first_or_404(sa.select(User).where(User.username == username))
-    return render_template('my_games.html', user=user)
+    return render_template('my_games.html', title=f'{user.username}\'s Games', user=user)
 
 @app.route('/playtime/<username>')
 @login_required
 def playtime(username):
     user = db.first_or_404(sa.select(User).where(User.username == username))
     form = HoursPlayedForm()
-    return render_template('playtime.html', user=user, form=form)
+    return render_template('playtime.html', title=f'{user.username}\'s Playtime', user=user, form=form)
 
 @app.route('/log_hours/<int:user_id>/<int:game_id>', methods=['GET', 'POST'])
 @login_required

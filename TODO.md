@@ -1,4 +1,6 @@
 TODO:
+Have some sort of landing page for first visit to the website, like check out all the cool features
+
 I need to actually make the website look good.
 
 Add an automatic post every time a game is added to played list?
