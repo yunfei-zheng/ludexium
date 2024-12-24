@@ -11,7 +11,7 @@
             </a>
         </td>
         <td width="80%">
-            {{ game.name }} 
+            <strong>{{ game.name }}</strong>
             {% if game.release_year %} 
             ({{ game.release_year }})
             {% else %}
@@ -24,13 +24,13 @@
             Played by {{ game.players_count() }} other players
             {% endif %}
         </td>
-        <td width="180px" align="right">
+        <td width="175px" id="game-play-button-td">
             {% if not current_user.is_playing(game) %}
             <button id="button-{{ game.id }}" type="button" class="btn btn-primary" 
-                onclick="togglePlay('{{ game.id }}', true)">Play</button>
+                onclick="togglePlay('{{ game.id }}', true)">Add to My Games List</button>
             {% else %}
             <button id="button-{{ game.id }}" type="button" class="btn btn-secondary" 
-                onclick="togglePlay('{{ game.id }}', false)">Unplay</button>
+                onclick="togglePlay('{{ game.id }}', false)">Remove from My Games List</button>
             {% endif %}
         </td>
     </tr>

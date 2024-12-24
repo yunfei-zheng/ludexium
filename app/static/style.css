@@ -1,27 +1,21 @@
 :root {
   --text-dark: #002240;
-  --text-light: #fbf2f2;
-  --text-muted: #595959;
+  --text-light: #ffffff;
 
-  --background-color: #fff;
-  --accent-color: #f56565;
-  --accent-color-2: #3bb54a;
-  --tag-color: #e5e5e5;
+  --background-color: #edffed;
+  --hover-color: green;
 
-  --border: 3px solid #000;
+  --border: 2px solid forestgreen;
 }
   
 :root.dark-mode {
   --text-dark: #fbf2f2;
-  --text-light: #000;
-  --text-muted: #595959;
+  --text-light: #000000;
 
-  --background-color: #1c2023;
-  --accent-color: #f56565;
-  --accent-color-2: #3bb54a;
-  --tag-color: var(--accent-color-2);
+  --background-color: #1c231d;
+  --hover-color: lightgreen;
 
-  --border: 3px solid #fff;
+  --border: 2px solid darkgreen;
 }
 
 html {
@@ -50,10 +44,14 @@ body {
   padding-right: 10px;
 }
 
+/* For removing annoying extra whitespace in links */
+a {
+  display: inline-block;
+}
+
 .game-table table, 
 .post-table table {
-  /* TODO might wanna check in light mode */
-  border: 2px solid darkgreen;
+  border: var(--border);
   margin-top: 5px;
   margin-bottom: 5px;
 }
@@ -63,9 +61,17 @@ td {
   background-color: var(--background-color) !important;
 }
 
+#game-play-button-td {
+  align-self: right;
+  vertical-align: middle;
+  text-align: right;
+}
+
 svg {
   width: 25px;
   height: 25px;
+
+  stroke: var(--text-dark);
 }
 
 .navbar-custom {
@@ -74,7 +80,35 @@ svg {
   padding-bottom: 0px;
 }
 
+.navbar-custom form {
+  margin-left: 1px;
+}
+
+.navbar-custom a.navbar-brand {
+  background: linear-gradient(90deg, red, orange, yellow, green, blue, purple);
+  background-clip: text;
+  -webkit-background-clip: text;
+}
+
+.navbar-custom a.navbar-brand:hover {
+  color: transparent;
+  transition: 500ms ease;
+}
+
 .navbar-custom .navbar-text,
 .navbar-custom .nav-link {
-  color: var(--text-dark) !important;
+  color: var(--text-dark);
+}
+
+.navbar-custom li:hover {
+  border-radius: 2px;
+  background-color: var(--hover-color);
+}
+
+.navbar-custom li:hover a {
+  color: var(--text-light);
+}
+
+.navbar-custom li:hover svg {
+  stroke: var(--text-light);
 }

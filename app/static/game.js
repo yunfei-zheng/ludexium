@@ -18,12 +18,12 @@ function togglePlay(gameId, isPlaying) {
         if (data.success) {
             // Toggle the button text and behavior
             if (isPlaying) {
-                button.textContent = 'Unplay';
+                button.textContent = 'Remove from My Games List';
                 button.setAttribute('onclick', `togglePlay('${gameId}', false)`);
                 button.classList.remove('btn-primary');
                 button.classList.add('btn-secondary');
             } else {
-                button.textContent = 'Play';
+                button.textContent = 'Add to My Games List';
                 button.setAttribute('onclick', `togglePlay('${gameId}', true)`);
                 button.classList.remove('btn-secondary');
                 button.classList.add('btn-primary');

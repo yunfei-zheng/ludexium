@@ -1,14 +1,16 @@
 # ludexium
 Ludexium, a social cataloging app for video games.
 
+The name is inspired by the Latin word for game, *ludus*.
+
 This is my submission for the Choose Your Own Adventure Challenge for the DALI Lab.
 
 Used Resources:
 I implemented a database for user information.
-I query the IGDB (Internet Games Database) for video game info.
-Python's ```igdb-api-v4``` [[(Github here)](https://github.com/twitchtv/igdb-api-python)]
+I query the IGDB (Internet Games Database) for video game info,
+which I accessed using Python's [igdb-api-v4](https://github.com/twitchtv/igdb-api-python)
 
-[ChartJS plugin for colors](https://github.com/kurkle/chartjs-plugin-autocolors)
+Also used: [ChartJS plugin for colors](https://github.com/kurkle/chartjs-plugin-autocolors)
 
 Borrowings:
 I also utilized parts of the templates in that tutorial, including the user login system, but everything else is new functionality.
