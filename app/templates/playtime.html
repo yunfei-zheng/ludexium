@@ -5,8 +5,10 @@
 {% if user.played_games_count() == 0 %}
 <p>This user hasn't added any games to their Game List yet.</p>
 {% else %}
-    <div>
-    <canvas id="playtimeChart" style="width:100%;max-width:1000px;max-height:400px"></canvas>
+    <div style="max-width: 100%; overflow-x: scroll">
+        <div id="playtimeContainer" style="width: 500px">
+        <canvas id="playtimeChart" style="height: 400px;"></canvas>
+        </div>
     </div>
     {% if user == current_user %}
     {% for play in user.played_games_play() %}

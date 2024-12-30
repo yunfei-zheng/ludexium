@@ -1,8 +1,10 @@
-new Chart(
+const hoursChart = new Chart(
     document.getElementById('playtimeChart'),
     {
     type: 'bar',
     options: {
+        responsive: true,
+        maintainAspectRatio: false,
         scales: {
             y: {
                 beginAtZero: true
@@ -23,3 +25,10 @@ new Chart(
         }]
     }
 });
+
+const playtimeContainer = document.getElementById('playtimeContainer');
+const totalLabels = hoursChart.data.labels.length;
+if (totalLabels > 3) {
+    const newWidth = 500 + ((totalLabels - 3) * 300); // can change that number for the width
+    playtimeContainer.style.width = `${newWidth}px`;
+}

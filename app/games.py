@@ -21,10 +21,16 @@ def search_games(query, page):
             db.session.commit()
 
         if gamejson.get('cover'):
-            #sizes: t_cover_small or t_thumb?
+            # Note: apparently need to get this instance every time before modifying attribute
+            game = db.session.get(Game, gamejson['id'])
+            # sizes q: t_cover_small or t_thumb?
             game.image_url = f"https://images.igdb.com/igdb/image/upload/t_thumb/{gamejson['cover']['image_id']}.jpg"
+            db.session.commit()
+
         if gamejson.get('first_release_date'):
+            game = db.session.get(Game, gamejson['id'])
             game.release_year = datetime.fromtimestamp(gamejson['first_release_date']).year
+            db.session.commit()
         gamelist.append(game)
     
     # for pagination
