@@ -279,13 +279,11 @@ def log_hours(user_id, game_id):
         db.session.commit()
     return redirect(url_for('playtime', username=current_user.username))
 
-@app.route("/toggle-theme")
+@app.route("/toggle-theme", methods=['POST'])
 def toggle_theme():
     # Note: this session is different from db.session
     current_theme = session.get("theme")
-    if current_theme == "dark":
-        session["theme"] = "light"
-    else:
-        session["theme"] = "dark"
+    new_theme = "dark" if current_theme == "light" else "light"
+    session["theme"] = new_theme
 
-    return redirect(request.args.get("current_page"))
+    return jsonify({"theme": new_theme})

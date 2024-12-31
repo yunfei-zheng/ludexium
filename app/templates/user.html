@@ -4,7 +4,7 @@
     <table>
         <tr valign="top">
             <td><img src="{{ user.avatar(128) }}"></td>
-            <td>
+            <td class="user-profile-info">
                 <h1>User: {{ user.username }}</h1>
                 {% if user.about_me %}<p>{{ user.about_me }}</p>{% endif %}
                 {% if user.last_seen %}
@@ -32,6 +32,8 @@
                     <a href="{{ url_for('my_games', username=user.username) }}"> 
                         {{ user.username }}'s Games List
                     </a>
+                </p>
+                <p>
                     <a href="{{ url_for('playtime', username=user.username) }}"> 
                         {{ user.username }}'s Playtime Chart
                     </a>

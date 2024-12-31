@@ -113,6 +113,10 @@ svg {
   stroke: var(--text-light);
 }
 
+.user-profile-info {
+  padding-left: 15px;
+}
+
 #playtimeScroller {
   max-width: 100%;
   overflow-x: scroll;
