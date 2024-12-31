@@ -13,6 +13,9 @@ const hoursChart = new Chart(
         plugins: {
             autocolors: {
                 mode: 'labels' //important
+            },
+            legend: {
+                display: false // This hides all text in the legend and also the labels.
             }
         }
     },
@@ -21,7 +24,6 @@ const hoursChart = new Chart(
         datasets: [{
             label: 'Playtime',
             data: chartdata,
-            borderWidth: 1
         }]
     }
 });

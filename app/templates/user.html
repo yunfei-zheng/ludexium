@@ -30,7 +30,11 @@
                 {% endif %}
                 <p>
                     <a href="{{ url_for('my_games', username=user.username) }}"> 
-                        {{ user.username }}'s Games List</a>
+                        {{ user.username }}'s Games List
+                    </a>
+                    <a href="{{ url_for('playtime', username=user.username) }}"> 
+                        {{ user.username }}'s Playtime Chart
+                    </a>
                 </p>
             </td>
         </tr>

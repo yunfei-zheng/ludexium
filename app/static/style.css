@@ -112,3 +112,16 @@ svg {
 .navbar-custom li:hover svg {
   stroke: var(--text-light);
 }
+
+#playtimeScroller {
+  max-width: 100%;
+  overflow-x: scroll;
+}
+
+#playtimeContainer {
+  width: 500px;
+}
+
+#playtimeChart {
+  height: 400px;
+}

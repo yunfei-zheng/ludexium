@@ -5,13 +5,14 @@
 {% if user.played_games_count() == 0 %}
 <p>This user hasn't added any games to their Game List yet.</p>
 {% else %}
-    <div style="max-width: 100%; overflow-x: scroll">
-        <div id="playtimeContainer" style="width: 500px">
-        <canvas id="playtimeChart" style="height: 400px;"></canvas>
+    <div id="playtimeScroller">
+        <div id="playtimeContainer">
+            <canvas id="playtimeChart"></canvas>
         </div>
     </div>
     {% if user == current_user %}
     {% for play in user.played_games_play() %}
+        <hr>
         Add hours for {{ play.game.name }} (Current: {{ play.hours_played }})
         <form method="POST" action="{{ url_for('log_hours', user_id=play.user_id, game_id=play.game_id) }}">
             {{ form.hidden_tag() }}
