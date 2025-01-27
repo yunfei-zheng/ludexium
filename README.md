@@ -12,18 +12,21 @@ which I accessed using Python's [igdb-api-v4](https://github.com/twitchtv/igdb-a
 
 Also used: [ChartJS plugin for colors](https://github.com/kurkle/chartjs-plugin-autocolors)
 
-Borrowings:
+# Borrowings:
 I also utilized parts of the templates in that tutorial, including the user login system, but everything else is new functionality.
 Also, I utilized some of the CSS from [this tutorial](https://python-web.teclado.com/section14/) for Dark Mode/Light Mode switching.
 
-My Learning Journey:
+# My Learning Journey:
 Mainly learned Flask from [Miguel Grinberg's Flask Mega-Tutorial.](https://blog.miguelgrinberg.com/post/the-flask-mega-tutorial-part-i-hello-world)
 
-Since I was pretty familiar with Python, I decided to write the backend in it.
-So I chose the Flask framework, which I had never worked with before this.
-Actually, this is my first time doing backend for any kind of real project.
+Since I was already familiar with Python, I chose to write the backend in it, and Flask seemed like a great framework to start with. This project marks my first experience working with backend development for a real project.
 
-An SQLite database. This is also my first experience working with SQL tables and any database.
-I store information about users, posts, games.
+I implemented JavaScript for frontend interactivity. Although I had limited experience with JavaScript before this project, I was able to learn and apply it effectively to enhance the user experience.
 
-I also implemented JavaScript for frontend interactivity which I didn't have much experience with before.
+I used SQLite for this project, which was my first experience working with SQL tables and databases. The database stores information about users, posts, and games.
+
+Capabilities include the ability to pick games from the IGDB database and log how many hours you have played, and see the information presented visually using ChartJS.
+
+# Additional Notes
+
+I don't think the email verification system actually works but it is not something I made myself anyway.
