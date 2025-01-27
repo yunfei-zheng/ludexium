@@ -12,6 +12,48 @@ which I accessed using Python's [igdb-api-v4](https://github.com/twitchtv/igdb-a
 
 Also used: [ChartJS plugin for colors](https://github.com/kurkle/chartjs-plugin-autocolors)
 
+# How to Run
+
+Setup Instructions
+
+To run Ludexium locally, follow these steps:
+
+Clone the repository:
+
+```git clone https://github.com/yourusername/ludexium.git```
+
+Navigate to the project directory:
+
+```cd ludexium```
+
+Create and activate a virtual environment:
+
+```
+python -m venv venv
+source venv/bin/activate   # On Windows: venv\Scripts\activate
+```
+
+Install dependencies:
+
+```pip install -r requirements.txt```
+
+Initialize the database:
+
+```flask db init
+flask db migrate
+flask db upgrade
+```
+
+Run the application:
+
+```flask run```
+
+Open your browser and navigate to:
+
+```http://localhost:5000```
+
+
+
 # Borrowings:
 I also utilized parts of the templates in that tutorial, including the user login system, but everything else is new functionality.
 Also, I utilized some of the CSS from [this tutorial](https://python-web.teclado.com/section14/) for Dark Mode/Light Mode switching.
