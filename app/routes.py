@@ -221,7 +221,6 @@ def play(game_id):
         return jsonify(success=False, message="Game is already not being played"), 400
 
     # Add the game to the user's played list
-    #flash(f'You have added {game.name} to your Played List!', 'success')
     current_user.start_playing(game)
     db.session.commit()
     return jsonify(success=True, message=f'You have added {game.name} to your My Games List!')
@@ -238,7 +237,6 @@ def unplay(game_id):
     if not current_user.is_playing(game):
         return jsonify(success=False, message="Game is already not being played"), 400
 
-    #flash(f'You have removed {game.name} to your Played List!', 'success')
     current_user.stop_playing(game)
     db.session.commit()
     return jsonify(success=True, message=f'You have removed {game.name} from your My Games List!')

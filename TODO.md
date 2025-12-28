@@ -6,3 +6,5 @@ TODO:
 * Need to make some sort of timeline? Or calendar? for when it was played?
 * Need to make logging hours actually better
 * Test email config.. (can do last, maybe just remove if not necessary)
+
+* in index, add message=flashmessage
